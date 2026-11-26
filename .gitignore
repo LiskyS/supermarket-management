@@ -1,0 +1,43 @@
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- IDE / editor ---
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- Node ---
+node_modules/
+npm-debug.log*
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+*.war
+
+# --- build output ---
+dist/
+build/
+
+# --- logs & temp ---
+*.log
+*.tmp
+~$*
+
+# --- local secrets ---
+.env
+.env.*
+*.local

@@ -1,0 +1,4 @@
+id,employee_id,employee_name,action,old_department,new_department,old_position,new_position,old_salary,new_salary,action_date,remark
+1,10,马烨,辞职,人事部,,人事专员,,4500,,2026-04-27 19:47:32,
+2,1,张志华,调岗,管理部,人事部,店长,hr,8000,8000,2026-04-28 16:15:46,
+3,7,王本佳,辞职,仓储部,,理货员,,3200,,2026-04-28 17:24:09,

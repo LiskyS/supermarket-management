@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>礼品兑换 - 超市管理系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background-color: #f5f5f5; color: #333; }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        header {
+            background-color: #e67e22;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        
+        .back-btn {
+            background-color: #d35400;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover { background-color: #a04000; }
+        
+        .member-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .member-input { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        
+        .member-input label { font-weight: bold; }
+        
+        .member-input input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary { background-color: #3498db; color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+        
+        .btn-redeem {
+            background-color: #e67e22;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s;
+        }
+        .btn-redeem:hover { background-color: #d35400; }
+        .btn-redeem:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+        
+        .points-display {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fef9e7;
+            border-radius: 4px;
+            border-left: 4px solid #f1c40f;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .gift-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .gift-card:hover { transform: translateY(-3px); }
+        
+        .gift-icon { font-size: 48px; margin-bottom: 15px; }
+        
+        .gift-name { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 10px; }
+        
+        .gift-desc { color: #7f8c8d; font-size: 13px; margin-bottom: 15px; }
+        
+        .gift-points {
+            font-size: 16px;
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .gift-stock { color: #95a5a6; font-size: 12px; margin-bottom: 15px; }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-icon { font-size: 48px; margin-bottom: 15px; }
+        .modal-icon.success { color: #27ae60; }
+        .modal-icon.error { color: #e74c3c; }
+        
+        .modal h2 { margin-bottom: 10px; }
+        .modal p { color: #7f8c8d; margin-bottom: 20px; }
+        .modal .btn { background-color: #3498db; color: white; }
+        .modal .btn:hover { background-color: #2980b9; }
+        
+        .loading { text-align: center; padding: 40px; color: #95a5a6; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎁 礼品兑换</h1>
+            <p>使用会员积分兑换精美礼品</p>
+            <div style="margin-top:15px;">
+                <a href="page_index.html" class="back-btn">返回首页</a>
+            </div>
+        </header>
+        
+        <!-- 会员身份确认 -->
+        <div class="member-section">
+            <div class="member-input">
+                <label>会员编号：</label>
+                <input type="text" id="memberIdInput" placeholder="请输入会员编号（如 M001）" />
+                <button class="btn btn-primary" onclick="queryMember()">查询积分</button>
+            </div>
+            <div class="points-display" id="pointsDisplay" style="display:none;">
+                当前积分：<span id="pointsValue">0</span> 分
+            </div>
+        </div>
+        
+        <!-- 礼品列表 -->
+        <div class="member-section">
+            <h2 style="margin-bottom:20px;">🎀 可兑换礼品</h2>
+            <div id="giftsList" class="loading">加载礼品中...</div>
+            <div class="gifts-grid" id="giftsGrid"></div>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">✅</div>
+            <h2 id="modalTitle">兑换成功</h2>
+            <p id="modalMessage">恭喜您成功兑换了礼品！</p>
+            <button class="btn" onclick="closeModal()">确定</button>
+        </div>
+    </div>
+    
+    <script src="js/data_manager.js"></script>
+    <script>
+        let currentMemberId = '';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGifts();
+        });
+        
+        function loadGifts() {
+            const gifts = DataManager.getGifts();
+            gifts.forEach(g => {
+                g.id = Number(g.id);
+                g.points_required = Number(g.points_required);
+                g.stock = Number(g.stock);
+            });
+            
+            const grid = document.getElementById('giftsGrid');
+            const loading = document.getElementById('giftsList');
+            loading.style.display = 'none';
+            
+            if (gifts.length === 0) {
+                grid.innerHTML = '<div class="loading">暂无礼品可供兑换</div>';
+                return;
+            }
+            
+            const icons = ['🛍️', '☕', '🌂', '🍱', '🎧'];
+            
+            gifts.forEach((gift, index) => {
+                const card = document.createElement('div');
+                card.className = 'gift-card';
+                card.innerHTML = `
+                    <div class="gift-icon">${icons[index % icons.length]}</div>
+                    <div class="gift-name">${gift.name}</div>
+                    <div class="gift-desc">${gift.description}</div>
+                    <div class="gift-points">${gift.points_required} 积分</div>
+                    <div class="gift-stock">库存：${gift.stock} 件</div>
+                    <button class="btn-redeem" onclick="redeemGift(${gift.id})" ${gift.stock <= 0 ? 'disabled' : ''}>
+                        ${gift.stock <= 0 ? '已兑完' : '立即兑换'}
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function queryMember() {
+            const memberId = document.getElementById('memberIdInput').value.trim();
+            if (!memberId) {
+                alert('请输入会员编号');
+                return;
+            }
+            
+            const member = DataManager.getMemberById(memberId);
+            if (!member) {
+                alert('会员不存在，请检查编号');
+                return;
+            }
+            
+            currentMemberId = memberId;
+            
+            const points = DataManager.getMemberPoints(memberId);
+            document.getElementById('pointsValue').textContent = points;
+            document.getElementById('pointsDisplay').style.display = 'block';
+        }
+        
+        function redeemGift(giftId) {
+            if (!currentMemberId) {
+                alert('请先在上方输入会员编号并查询积分');
+                return;
+            }
+            
+            const result = DataManager.redeemGift(currentMemberId, giftId);
+            
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            
+            if (result.success) {
+                icon.className = 'modal-icon success';
+                icon.textContent = '✅';
+                title.textContent = '兑换成功';
+                message.textContent = result.message;
+            } else {
+                icon.className = 'modal-icon error';
+                icon.textContent = '❌';
+                title.textContent = '兑换失败';
+                message.textContent = result.message;
+            }
+            
+            document.getElementById('resultModal').style.display = 'block';
+            
+            if (result.success && currentMemberId) {
+                const points = DataManager.getMemberPoints(currentMemberId);
+                document.getElementById('pointsValue').textContent = points;
+                
+                document.getElementById('giftsGrid').innerHTML = '';
+                loadGifts();
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

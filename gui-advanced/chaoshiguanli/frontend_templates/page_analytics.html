@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析 - 超市管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+        
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 20px 0 15px 0;
+            color: #34495e;
+        }
+        
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .chart {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .top-customers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .top-customers {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .customer-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+        }
+        
+        .customer-list {
+            list-style-type: none;
+        }
+        
+        .customer-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .customer-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>📊 数据分析</h1>
+            <a href="/" class="back-button">返回首页</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- 每日消费顾客数量分析 -->
+        <div class="section">
+            <h2>1. 每日消费顾客数量分析</h2>
+            <div class="chart-container">
+                <img id="dailyCustomersChart" class="chart" alt="每日消费顾客数量图表">
+            </div>
+            <div class="stats-grid" id="dailyCustomersStats">
+                <!-- 统计数据将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 客单价分析 -->
+        <div class="section">
+            <h2>2. 客单价分析</h2>
+            <div class="chart-container">
+                <img id="averageTransactionChart" class="chart" alt="客单价图表">
+            </div>
+            <div class="stats-grid" id="averageTransactionStats">
+                <!-- 统计数据将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+
+        
+
+        
+        <!-- 每月固定成本分析 -->
+        <div class="section">
+            <h2>5. 每月固定成本分析</h2>
+            <div class="chart-container">
+                <img id="costsChart" class="chart" alt="每月固定成本图表">
+            </div>
+            <div class="stats-grid" id="costsStats">
+                <!-- 统计数据将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 成本构成分析 -->
+        <div class="section">
+            <h2>6. 成本构成分析</h2>
+            <div class="chart-container">
+                <img id="costBreakdownChart" class="chart" alt="成本构成图表">
+            </div>
+            <div class="stats-grid" id="costBreakdownStats">
+                <!-- 统计数据将通过JavaScript动态加载 -->
+            </div>
+        </div>
+        
+        <!-- 每周周转率分析 -->
+        <div class="section">
+            <h2>7. 每周周转率分析</h2>
+            <div class="chart-container">
+                <img id="turnoverTrendChart" class="chart" alt="周转率趋势图表">
+            </div>
+            <div class="stats-grid" id="turnoverStats">
+                <!-- 统计数据将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 页面加载时获取所有数据分析数据
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDailyCustomersData();
+            loadAverageTransactionData();
+            loadCostsData();
+            loadCostBreakdownData();
+            loadTurnoverTrendData();
+        });
+        
+        // 加载每日消费顾客数量数据
+        async function loadDailyCustomersData() {
+            const response = await fetch('/api/analytics/daily_customers');
+            const data = await response.json();
+            
+            // 更新图表
+            document.getElementById('dailyCustomersChart').src = 'data:image/png;base64,' + data.chart;
+            
+            // 更新统计数据
+            const statsGrid = document.getElementById('dailyCustomersStats');
+            const totalCustomers = data.counts.reduce((sum, count) => sum + count, 0);
+            const avgDailyCustomers = (totalCustomers / data.counts.length).toFixed(1);
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${totalCustomers}</div>
+                    <div class="stat-label">总顾客数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${avgDailyCustomers}</div>
+                    <div class="stat-label">日均顾客数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.max(...data.counts)}</div>
+                    <div class="stat-label">最高单日顾客数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.min(...data.counts)}</div>
+                    <div class="stat-label">最低单日顾客数</div>
+                </div>
+            `;
+        }
+        
+        // 加载客单价数据
+        async function loadAverageTransactionData() {
+            const response = await fetch('/api/analytics/average_transaction');
+            const data = await response.json();
+            
+            // 更新图表
+            document.getElementById('averageTransactionChart').src = 'data:image/png;base64,' + data.chart;
+            
+            // 更新统计数据
+            const statsGrid = document.getElementById('averageTransactionStats');
+            const totalSales = data.average_prices.reduce((sum, price) => sum + price, 0);
+            const avgTransaction = (totalSales / data.average_prices.length).toFixed(2);
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">¥${totalSales.toFixed(2)}</div>
+                    <div class="stat-label">总销售额</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${avgTransaction}</div>
+                    <div class="stat-label">平均客单价</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${Math.max(...data.average_prices).toFixed(2)}</div>
+                    <div class="stat-label">最高客单价</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${Math.min(...data.average_prices).toFixed(2)}</div>
+                    <div class="stat-label">最低客单价</div>
+                </div>
+            `;
+        }
+        
+
+        
+
+        
+        // 加载每月固定成本数据
+        async function loadCostsData() {
+            const response = await fetch('/api/analytics/costs');
+            const data = await response.json();
+            
+            // 更新图表
+            document.getElementById('costsChart').src = 'data:image/png;base64,' + data.chart;
+            
+            // 更新统计数据
+            const statsGrid = document.getElementById('costsStats');
+            const totalCost = data.totals.reduce((sum, cost) => sum + cost, 0);
+            const avgCost = (totalCost / data.totals.length).toFixed(2);
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">¥${totalCost.toLocaleString()}</div>
+                    <div class="stat-label">总固定成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${avgCost}</div>
+                    <div class="stat-label">平均月成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${Math.max(...data.totals).toLocaleString()}</div>
+                    <div class="stat-label">最高月成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${Math.min(...data.totals).toLocaleString()}</div>
+                    <div class="stat-label">最低月成本</div>
+                </div>
+            `;
+        }
+        
+        // 加载成本构成数据
+        async function loadCostBreakdownData() {
+            const response = await fetch('/api/analytics/cost_breakdown');
+            const data = await response.json();
+            
+            // 更新图表
+            document.getElementById('costBreakdownChart').src = 'data:image/png;base64,' + data.chart;
+            
+            // 更新统计数据
+            const statsGrid = document.getElementById('costBreakdownStats');
+            const total = Object.values(data.breakdown).reduce((sum, value) => sum + value, 0);
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">¥${total.toLocaleString()}</div>
+                    <div class="stat-label">总成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${data.breakdown.salaries?.toLocaleString() || 0}</div>
+                    <div class="stat-label">人员成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${data.breakdown.rent?.toLocaleString() || 0}</div>
+                    <div class="stat-label">房租成本</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">¥${data.breakdown.utilities?.toLocaleString() || 0}</div>
+                    <div class="stat-label">水电成本</div>
+                </div>
+            `;
+        }
+        
+        // 加载周转率趋势数据
+        async function loadTurnoverTrendData() {
+            const response = await fetch('/api/analytics/turnover_trend');
+            const data = await response.json();
+            
+            // 更新图表
+            document.getElementById('turnoverTrendChart').src = 'data:image/png;base64,' + data.chart;
+            
+            // 更新统计数据
+            const statsGrid = document.getElementById('turnoverStats');
+            
+            // 计算各部门平均周转率
+            const avgTurnover = {};
+            for (const [dept, rates] of Object.entries(data.trend)) {
+                const avg = (rates.reduce((sum, rate) => sum + rate, 0) / rates.length).toFixed(2);
+                avgTurnover[dept] = avg;
+            }
+            
+            // 找出最高和最低周转率的部门
+            let maxDept = '';
+            let maxRate = 0;
+            let minDept = '';
+            let minRate = 999;
+            
+            for (const [dept, rate] of Object.entries(avgTurnover)) {
+                const r = parseFloat(rate);
+                if (r > maxRate) {
+                    maxRate = r;
+                    maxDept = dept;
+                }
+                if (r < minRate) {
+                    minRate = r;
+                    minDept = dept;
+                }
+            }
+            
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${maxDept}</div>
+                    <div class="stat-label">最高周转率部门</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${maxRate}次/周</div>
+                    <div class="stat-label">最高周转率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${minDept}</div>
+                    <div class="stat-label">最低周转率部门</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${minRate}次/周</div>
+                    <div class="stat-label">最低周转率</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+id,member_id,name,phone,email,birthday,join_date,points,level
+1,M001,张三,13800138001,zhangsan@example.com,1990-04-27,2024-01-01,180127,金卡会员
+2,M002,李四,13800138002,lisi@example.com,1992-02-02,2024-02-01,200,银卡会员
+3,M003,王五,13800138003,wangwu@example.com,1995-03-03,2024-03-01,300,金卡会员
+4,M004,赵六,13800138004,zhaoliu@example.com,1998-04-04,2024-04-01,150,银卡会员
